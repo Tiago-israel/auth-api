@@ -22,7 +22,12 @@ public class UsuarioService {
 	private JwtTokenUtils jwtTokenUtils;
 	
 	public UsuarioService() {
+		UsuarioDto dto = new UsuarioDto();
+		dto.setEmail("tiagoisrael77@gmail.com");
+		dto.setNome("nome");
+		dto.setSenha("12345");
 		cont++;
+		this.salvar(dto);
 	}
 	
 	public UsuarioDto salvar(UsuarioDto usuarioDto) {
@@ -30,19 +35,22 @@ public class UsuarioService {
 		usuarioDto.setSenha(SenhaUtils.gerarBCript(usuarioDto.getSenha()));
 		usuarios.add(usuarioDto);
 		usuarios.forEach(ususario -> {
-			System.out.println(ususario.getNome() + ususario.getSenha());
+			System.out.println(ususario.getNome() + ususario.getSenha() + ususario.getEmail()  );
 		});
 		return usuarioDto;
 	}
 	
 	public String Login(UsuarioDto usuarioDto) {
 		usuarios.forEach(usuario -> {
-			if(usuarioDto.getEmail().equals(usuario.getEmail()) && SenhaUtils.validarSenha(usuarioDto.getSenha(), usuario.getSenha()) ) {
+			if(usuarioDto.getEmail().equals(usuario.getEmail()) ) {
 				usuarioFiltrado = usuario;
 			}
 		});
 		if(usuarioFiltrado != null) {
-			return jwtTokenUtils.gerarToken(usuarioFiltrado.getNome());
+			if(SenhaUtils.validarSenha(usuarioDto.getSenha(), usuarioFiltrado.getSenha())) {
+				System.out.println(usuarioFiltrado.getNome()+" logado!!!");
+				return jwtTokenUtils.gerarToken(usuarioFiltrado.getNome());
+			}
 		}
 		return null;
 	}

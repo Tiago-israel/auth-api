@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.authapi.dto.TokenDto;
 import br.com.authapi.dto.UsuarioDto;
 import br.com.authapi.response.Response;
 import br.com.authapi.service.UsuarioService;
@@ -41,8 +42,11 @@ public class UsuarioController {
 	}
 	
 	@PostMapping("/login")
-	public String login(@RequestBody UsuarioDto usuarioDto){
-		return this.usuarioService.Login(usuarioDto);
+	public ResponseEntity<Response<TokenDto>> login(@RequestBody UsuarioDto usuarioDto){
+		TokenDto tokenDto = new TokenDto();
+		tokenDto.setToken(this.usuarioService.Login(usuarioDto));
+		Response<TokenDto>response = new Response<>(tokenDto);
+		return new ResponseEntity<Response<TokenDto>>(response,HttpStatus.OK);
 	}
 	
 	@GetMapping

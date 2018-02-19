@@ -25,11 +25,8 @@ public class JwtTokenUtils {
 	private String header;
 
 	public String gerarToken(String username) {
-		Map<String, Object>map = new HashMap<>();
-		map.put("admin", false);
 		return Jwts.builder()
 				.setSubject(username)
-				.setClaims(map)
 				.setExpiration(gerarDataExpiracao())
 				.signWith(SignatureAlgorithm.HS512, secret)
 				.compact();
